@@ -42,7 +42,12 @@ const config = {
         ],
         spotlight: { color: '#FFFFFF', intensity: 5, position: [0, 3, 5], angle: 0.8, penumbra: 0.8, distance: 20 }
     },
-    coffee: { color: '#3D2817', opacity: 0.85, fillDuration: 2.0 },
+    coffee: {
+        names: ['Espresso', 'Latte', 'Cappuccino', 'Americano', 'Flat White', 'Macchiato'],
+        color: '#3D2817',
+        opacity: 0.85,
+        fillDuration: 2.0
+    },
     animation: {
         cupEntranceDuration: 1.2,
         pourStartDelay: 0.5,
@@ -648,7 +653,14 @@ function createAnimationTimeline() {
         const cupToAnimate = cupQueue.shift(); // Get the first cup
         const originalIndex = cups.indexOf(cupToAnimate);
         currentCupIndex = originalIndex;
-        updateUI();
+
+        const coffeeName = config.coffee.names[Math.floor(Math.random() * config.coffee.names.length)];
+        document.getElementById('coffee-name').textContent = coffeeName;
+        document.getElementById('cup-count').textContent = `(cup ${originalIndex + 1}/${numCups})`;
+        document.getElementById('shot-status').textContent = '—';
+        document.getElementById('milk-status').textContent = '—';
+        document.getElementById('fill-progress-bar').style.width = '0%';
+        document.getElementById('fill-progress-percent').textContent = '0%';
 
         // Move the rest of the queue forward
         gsap.to(cupQueue.map(c => c.position), {
@@ -723,7 +735,14 @@ function createAnimationTimeline() {
             y: 1,
             duration: config.coffee.fillDuration,
             ease: 'power2.inOut',
+            onStart: () => {
+                document.getElementById('shot-status').textContent = '✓';
+            },
             onUpdate: function() {
+                const progress = this.progress();
+                const percent = Math.round(progress * 100);
+                document.getElementById('fill-progress-bar').style.width = `${percent}%`;
+                document.getElementById('fill-progress-percent').textContent = `${percent}%`;
                 const fillHeight = config.cups[0].height * 0.88;
                 coffeeFill.position.y = -config.cups[0].height / 2 + (fillHeight * coffeeFill.scale.y) / 2;
             },
@@ -732,7 +751,6 @@ function createAnimationTimeline() {
                 if (totalCupsFilled % numCups === 0) {
                     cycleCount++;
                 }
-                updateUI();
             }
         }, '<');
 
@@ -948,11 +966,7 @@ function setupControls() {
     });
 }
 
-function updateUI() {
-    document.getElementById('current-cup').textContent = (currentCupIndex + 1);
-    document.getElementById('cycle-count').textContent = cycleCount;
-    document.getElementById('total-cups').textContent = totalCupsFilled;
-}
+
 
 function getFrustumSize() {
     if (window.innerWidth < 768) {
@@ -988,7 +1002,6 @@ function init() {
     createAestheticParticles();
     createAnimationTimeline();
     setupControls();
-    updateUI();
     animate(0);
 }
 
