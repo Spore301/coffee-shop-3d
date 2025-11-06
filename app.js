@@ -970,7 +970,7 @@ function setupControls() {
 
 function getFrustumSize() {
     if (window.innerWidth < 768) {
-        return 12; // Zoom out on mobile
+        return 18; // Zoom out on mobile
     }
     return 10; // Default for desktop
 }

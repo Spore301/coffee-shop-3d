@@ -189,10 +189,43 @@
             opacity: 0;
             pointer-events: none;
         }
+
+        @media screen and (max-width: 768px) {
+            .brewing-panel {
+                min-width: 0;
+                width: 90%;
+                padding: var(--space-16);
+                gap: var(--space-12);
+            }
+
+            .brewing-title {
+                font-size: var(--font-size-lg);
+                gap: var(--space-4);
+            }
+
+            .progress-container {
+                font-size: var(--font-size-sm);
+                gap: var(--space-8);
+            }
+
+            .title {
+                top: var(--space-24);
+                left: var(--space-24);
+                font-size: var(--font-size-2xl);
+            }
+
+            .toggle-ui-btn {
+                top: var(--space-16);
+                right: var(--space-16);
+                width: 40px;
+                height: 40px;
+                font-size: var(--font-size-lg);
+            }
+        }
     </style>
 </head>
 <body>
-    <div id="canvas-container" class="ui-hidden">
+    <div id="canvas-container" class.ui-hidden">
         <button class="toggle-ui-btn" id="toggle-ui-btn" title="Show UI (Press U)">👁</button>
         <h1 class="title">Premium Espresso Experience</h1>
         <div class="brewing-panel">
