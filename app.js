@@ -656,7 +656,7 @@ function createAnimationTimeline() {
 
         const coffeeName = config.coffee.names[Math.floor(Math.random() * config.coffee.names.length)];
         document.getElementById('coffee-name').textContent = coffeeName;
-        document.getElementById('cup-count').textContent = `(cup ${originalIndex + 1}/${numCups})`;
+        document.getElementById('cup-count').textContent = `(Cup ${originalIndex + 1})`;
         document.getElementById('shot-status').textContent = '—';
         document.getElementById('milk-status').textContent = '—';
         document.getElementById('fill-progress-bar').style.width = '0%';
