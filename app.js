@@ -79,7 +79,7 @@ function initScene() {
 
     // Camera - Orthographic
     const aspect = window.innerWidth / window.innerHeight;
-    const frustumSize = 10;
+    const frustumSize = getFrustumSize();
     camera = new THREE.OrthographicCamera(
         frustumSize * aspect / -2,
         frustumSize * aspect / 2,
@@ -954,10 +954,17 @@ function updateUI() {
     document.getElementById('total-cups').textContent = totalCupsFilled;
 }
 
+function getFrustumSize() {
+    if (window.innerWidth < 768) {
+        return 12; // Zoom out on mobile
+    }
+    return 10; // Default for desktop
+}
+
 // Handle window resize
 function onWindowResize() {
     const aspect = window.innerWidth / window.innerHeight;
-    const frustumSize = 8;
+    const frustumSize = getFrustumSize();
     
     camera.left = frustumSize * aspect / -2;
     camera.right = frustumSize * aspect / 2;
