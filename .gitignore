@@ -1,0 +1,10 @@
+# Ignore everything
+*
+
+# But not these two files
+!app.js
+!index.html
+
+# Also unignore the .gitignore file itself
+!.gitignore
+
