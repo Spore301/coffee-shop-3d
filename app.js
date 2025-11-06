@@ -1,8 +1,8 @@
 // Configuration from provided data
 const config = {
     scene: {
-        backgroundColor: '#F5E6D3',
-        fogColor: '#F5E6D3',
+        backgroundColor: '#8b6313',
+        fogColor: '#8b6313',
         fogNear: 5,
         fogFar: 50
     },
@@ -39,7 +39,8 @@ const config = {
             { position: [-3, 5, -3], color: '#FFD700', intensity: 2.0, distance: 20 },
             { position: [0, 5, -3], color: '#FFD700', intensity: 2.0, distance: 20 },
             { position: [3, 5, -3], color: '#FFD700', intensity: 2.0, distance: 20 }
-        ]
+        ],
+        spotlight: { color: '#FFFFFF', intensity: 5, position: [0, 3, 5], angle: 0.8, penumbra: 0.8, distance: 20 }
     },
     coffee: { color: '#3D2817', opacity: 0.85, fillDuration: 2.0 },
     animation: {
@@ -65,12 +66,13 @@ let isPlaying = true;
 let currentCupIndex = 0;
 let cycleCount = 0;
 let totalCupsFilled = 0;
-let uiVisible = true;
+let uiVisible = false;
 
 // Initialize scene
 function initScene() {
     // Scene
     scene = new THREE.Scene();
+    scene.background = new THREE.Color(config.scene.backgroundColor);
     scene.fog = new THREE.Fog(config.scene.fogColor, config.scene.fogNear, config.scene.fogFar);
     
     console.log('Scene initialized with background:', config.scene.backgroundColor);
@@ -155,6 +157,19 @@ function initScene() {
         scene.add(lightGroup);
         pendantLights.push({ group: lightGroup, light: pointLight });
     });
+
+    // Soft spotlight on the machine
+    const spotLight = new THREE.SpotLight(
+        config.lighting.spotlight.color,
+        config.lighting.spotlight.intensity,
+        config.lighting.spotlight.distance,
+        config.lighting.spotlight.angle,
+        config.lighting.spotlight.penumbra
+    );
+    spotLight.position.set(...config.lighting.spotlight.position);
+    spotLight.target.position.set(0, 0, 0);
+    scene.add(spotLight);
+    scene.add(spotLight.target);
 }
 
 // Create environment
@@ -222,10 +237,10 @@ function createEnvironment() {
     context.fillStyle = '#FFF8DC';
     context.fillRect(0, 0, 256, 128);
     context.fillStyle = '#3D2817';
-    context.font = 'bold 48px sans-serif';
+    context.font = 'bold 48px "Courier Prime"';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.fillText('COFFEE', 128, 64);
+    context.fillText('Hi!', 128, 64);
 
     const canvasTexture = new THREE.CanvasTexture(artCanvas);
     const canvasGeometry = new THREE.PlaneGeometry(2.6, 1.6);
@@ -632,6 +647,8 @@ function createAnimationTimeline() {
     function animateNextCup() {
         const cupToAnimate = cupQueue.shift(); // Get the first cup
         const originalIndex = cups.indexOf(cupToAnimate);
+        currentCupIndex = originalIndex;
+        updateUI();
 
         // Move the rest of the queue forward
         gsap.to(cupQueue.map(c => c.position), {
@@ -709,6 +726,13 @@ function createAnimationTimeline() {
             onUpdate: function() {
                 const fillHeight = config.cups[0].height * 0.88;
                 coffeeFill.position.y = -config.cups[0].height / 2 + (fillHeight * coffeeFill.scale.y) / 2;
+            },
+            onComplete: () => {
+                totalCupsFilled++;
+                if (totalCupsFilled % numCups === 0) {
+                    cycleCount++;
+                }
+                updateUI();
             }
         }, '<');
 
