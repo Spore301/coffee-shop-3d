@@ -26,7 +26,7 @@ const config = {
     shelving: {
         positions: [[2, 4, -4.5], [2, 2, -4.5], [-2, 4, -4.5], [-2, 2, -4.5]],
         bottles: [
-            { color: '#D4A574', height: 1.8, label: 'Vanilla' },
+            { color: '#D4A574', height: 1.8, label: 'Vanilla',},
             { color: '#8B4513', height: 1.6, label: 'Caramel' },
             { color: '#F4A460', height: 1.5, label: 'Hazelnut' }
         ]
@@ -44,8 +44,8 @@ const config = {
     },
     coffee: {
         names: ['Espresso', 'Latte', 'Cappuccino', 'Americano', 'Flat White', 'Macchiato'],
-        color: '#3D2817',
-        opacity: 0.85,
+        color: '#1e1209',
+        opacity: 1,
         fillDuration: 2.0
     },
     animation: {
@@ -1002,7 +1002,7 @@ function init() {
     createAestheticParticles();
     createAnimationTimeline();
     setupControls();
-    animate(0);
+    animate(1);
 }
 
 // Start the application
